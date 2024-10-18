@@ -1,0 +1,110 @@
+version: "3.9"
+
+services:
+
+  heimdall:
+    image: lscr.io/linuxserver/heimdall:${HEIMDALL_VERSION}
+    container_name: tfg-heimdall
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TIMEZONE}
+    volumes:
+      - ${HEIMDALL_CONFIG_FOLDER}:/config
+    restart: unless-stopped
+    networks:
+      - docker-network
+    labels:
+      traefik.enable: true
+      traefik.http.routers.tfg-heimdall.entrypoints: web
+      traefik.http.routers.tfg-heimdall.rule: Host(`dashboard.${DOMAIN?err}`)
+      traefik.http.routers.tfg-heimdall.middlewares: redirect
+      traefik.http.routers.tfg-heimdall-secure.entrypoints: websecure
+      traefik.http.routers.tfg-heimdall-secure.rule: Host(`dashboard.${DOMAIN?err}`)
+      traefik.http.routers.tfg-heimdall-secure.tls: true
+      traefik.http.routers.tfg-heimdall-secure.tls.certresolver: Host(`dashboard.${DOMAIN?err}`)
+      traefik.http.services.tfg-heimdall-secure.loadbalancer.server.port: 80
+
+  postgresql:
+    image: postgres:${POSTGRESQL_VERSION}
+    container_name: tfg-postgresql
+    restart: always
+    shm_size: 256mb
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRESQL_PASSWORD?err}
+    networks:
+      - docker-network
+
+  pgadmin:
+    image: dpage/pgadmin4:${PGADMIN_VERSION}
+    container_name: tfg-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+      PGADMIN_CONFIG_LOGIN_BANNER:
+      PGADMIN_CONFIG_CONSOLE_LOG_LEVEL: 10
+    networks:
+      - docker-network
+    labels:
+      traefik.enable: true
+      traefik.http.routers.tfg-jenkins.entrypoints: web
+      traefik.http.routers.tfg-jenkins.rule: Host(`pgadmin.${DOMAIN?err}`)
+      traefik.http.routers.tfg-jenkins.middlewares: redirect
+      traefik.http.routers.tfg-jenkins-secure.entrypoints: websecure
+      traefik.http.routers.tfg-jenkins-secure.rule: Host(`pgadmin.${DOMAIN?err}`)
+      traefik.http.routers.tfg-jenkins-secure.tls: true
+      traefik.http.routers.tfg-jenkins-secure.tls.certresolver: ${DOMAIN?err}
+      traefik.http.services.tfg-jenkins-secure.loadbalancer.server.port: 80
+
+  jenkins:
+    image: jenkins/jenkins:${JENKINS_VERSION}
+    container_name: tfg-jenkins
+    restart: always
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/local/bin/docker:/usr/bin/docker
+      - ${JENKINS_HOME_FOLDER}:/var/jenkins_home
+      - ${JENKINS_DOWNLOAD_FOLDER}:/var/jenkins_home/downloads
+    networks:
+      - docker-network
+    labels:
+      traefik.enable: true
+      traefik.http.routers.tfg-jenkins.entrypoints: web
+      traefik.http.routers.tfg-jenkins.rule: Host(`jenkins.${DOMAIN?err}`)
+      traefik.http.routers.tfg-jenkins.middlewares: redirect
+      traefik.http.routers.tfg-jenkins-secure.entrypoints: websecure
+      traefik.http.routers.tfg-jenkins-secure.rule: Host(`jenkins.${DOMAIN?err}`)
+      traefik.http.routers.tfg-jenkins-secure.tls: true
+      traefik.http.routers.tfg-jenkins-secure.tls.certresolver: ${DOMAIN?err}
+      traefik.http.services.tfg-jenkins-secure.loadbalancer.server.port: 8080
+
+  sonarqube:
+    image: sonarqube:${SONARQUBE_VERSION}
+    container_name: tfg-sonarqube
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${SONARQUBE_DATA_FOLDER}:/opt/sonarqube/data
+      - ${SONARQUBE_LOGS_FOLDER}:/opt/sonarqube/logs
+      - ${SONARQUBE_EXTENSIONS_FOLDER}:/opt/sonarqube/extensions
+    environment:
+      SONAR_ES_BOOTSTRAP_CHECKS_DISABLE: true
+    networks:
+      - docker-network
+    labels:
+      traefik.enable: true
+      traefik.http.routers.tfg-sonar.entrypoints: web
+      traefik.http.routers.tfg-sonar.rule: Host(`sonar.${DOMAIN?err}`)
+      traefik.http.routers.tfg-sonar.middlewares: redirect
+      traefik.http.routers.tfg-sonar-secure.entrypoints: websecure
+      traefik.http.routers.tfg-sonar-secure.rule: Host(`sonar.${DOMAIN?err}`)
+      traefik.http.routers.tfg-sonar-secure.tls: true
+      traefik.http.routers.tfg-sonar-secure.tls.certresolver: ${DOMAIN?err}
+      traefik.http.services.tfg-sonar-secure.loadbalancer.server.port: 9000
+
+networks:
+  docker-network:
+    external: true
