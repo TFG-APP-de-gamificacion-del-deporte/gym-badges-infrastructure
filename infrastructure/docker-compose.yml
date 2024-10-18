@@ -47,14 +47,14 @@ services:
       - docker-network
     labels:
       traefik.enable: true
-      traefik.http.routers.tfg-jenkins.entrypoints: web
-      traefik.http.routers.tfg-jenkins.rule: Host(`pgadmin.${DOMAIN?err}`)
-      traefik.http.routers.tfg-jenkins.middlewares: redirect
-      traefik.http.routers.tfg-jenkins-secure.entrypoints: websecure
-      traefik.http.routers.tfg-jenkins-secure.rule: Host(`pgadmin.${DOMAIN?err}`)
-      traefik.http.routers.tfg-jenkins-secure.tls: true
-      traefik.http.routers.tfg-jenkins-secure.tls.certresolver: ${DOMAIN?err}
-      traefik.http.services.tfg-jenkins-secure.loadbalancer.server.port: 80
+      traefik.http.routers.tfg-pgadmin.entrypoints: web
+      traefik.http.routers.tfg-pgadmin.rule: Host(`pgadmin.${DOMAIN?err}`)
+      traefik.http.routers.tfg-pgadmin.middlewares: redirect
+      traefik.http.routers.tfg-pgadmin-secure.entrypoints: websecure
+      traefik.http.routers.tfg-pgadmin-secure.rule: Host(`pgadmin.${DOMAIN?err}`)
+      traefik.http.routers.tfg-pgadmin-secure.tls: true
+      traefik.http.routers.tfg-pgadmin-secure.tls.certresolver: ${DOMAIN?err}
+      traefik.http.services.tfg-pgadmin-secure.loadbalancer.server.port: 80
 
   jenkins:
     image: jenkins/jenkins:${JENKINS_VERSION}
