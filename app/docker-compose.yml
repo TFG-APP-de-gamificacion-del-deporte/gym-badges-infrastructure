@@ -8,8 +8,6 @@ services:
       PGID: ${PGID}
       TZ: ${TIMEZONE}
       CLOUDSQL_CONNECTION_NAME: ${CLOUDSQL_CONNECTION_NAME}
-    ports:
-      - 8080:8080
     restart: unless-stopped
     networks:
       - docker-network
