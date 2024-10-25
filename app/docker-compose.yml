@@ -16,14 +16,14 @@ services:
       - docker-network
     labels:
       traefik.enable: true
-      traefik.http.routers.tfg-heimdall.entrypoints: web
-      traefik.http.routers.tfg-heimdall.rule: Host(`api.${DOMAIN?err}`)
-      traefik.http.routers.tfg-heimdall.middlewares: redirect
-      traefik.http.routers.tfg-heimdall-secure.entrypoints: websecure
-      traefik.http.routers.tfg-heimdall-secure.rule: Host(`api.${DOMAIN?err}`)
-      traefik.http.routers.tfg-heimdall-secure.tls: true
-      traefik.http.routers.tfg-heimdall-secure.tls.certresolver: Host(`api.${DOMAIN?err}`)
-      traefik.http.services.tfg-heimdall-secure.loadbalancer.server.port: 8080
+      traefik.http.routers.tfg-api.entrypoints: web
+      traefik.http.routers.tfg-api.rule: Host(`api.${DOMAIN?err}`)
+      traefik.http.routers.tfg-api.middlewares: redirect
+      traefik.http.routers.tfg-api-secure.entrypoints: websecure
+      traefik.http.routers.tfg-api-secure.rule: Host(`api.${DOMAIN?err}`)
+      traefik.http.routers.tfg-api-secure.tls: true
+      traefik.http.routers.tfg-api-secure.tls.certresolver: Host(`api.${DOMAIN?err}`)
+      traefik.http.services.tfg-api-secure.loadbalancer.server.port: 8080
 
 networks:
   docker-network:
