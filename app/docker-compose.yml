@@ -8,6 +8,9 @@ services:
       PGID: ${PGID}
       TZ: ${TIMEZONE}
       CLOUDSQL_CONNECTION_NAME: ${CLOUDSQL_CONNECTION_NAME}
+      CLOUDSQL_USER: ${CLOUDSQL_USER}
+      CLOUDSQL_PASSWORD: ${CLOUDSQL_PASSWORD}
+      CLOUDSQL_DB: ${CLOUDSQL_DB}
     restart: unless-stopped
     networks:
       - docker-network
