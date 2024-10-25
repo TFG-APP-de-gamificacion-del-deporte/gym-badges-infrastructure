@@ -1,0 +1,23 @@
+services:
+
+  gym-badge-api:
+    image: jmoyonero/tfg-gym-badges-api:${GYM_BADGES_API_VERSION}
+    container_name: gym-badge-api
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TIMEZONE}
+      CLOUDSQL_CONNECTION_NAME: ${CLOUDSQL_CONNECTION_NAME}
+    ports:
+      - 8080:8080
+    restart: unless-stopped
+    labels:
+      traefik.enable: true
+      traefik.http.routers.tfg-heimdall.entrypoints: web
+      traefik.http.routers.tfg-heimdall.rule: Host(`api.${DOMAIN?err}`)
+      traefik.http.routers.tfg-heimdall.middlewares: redirect
+      traefik.http.routers.tfg-heimdall-secure.entrypoints: websecure
+      traefik.http.routers.tfg-heimdall-secure.rule: Host(`api.${DOMAIN?err}`)
+      traefik.http.routers.tfg-heimdall-secure.tls: true
+      traefik.http.routers.tfg-heimdall-secure.tls.certresolver: Host(`api.${DOMAIN?err}`)
+      traefik.http.services.tfg-heimdall-secure.loadbalancer.server.port: 8080
