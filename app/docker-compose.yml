@@ -11,6 +11,8 @@ services:
     ports:
       - 8080:8080
     restart: unless-stopped
+    networks:
+      - docker-network
     labels:
       traefik.enable: true
       traefik.http.routers.tfg-heimdall.entrypoints: web
@@ -21,3 +23,7 @@ services:
       traefik.http.routers.tfg-heimdall-secure.tls: true
       traefik.http.routers.tfg-heimdall-secure.tls.certresolver: Host(`api.${DOMAIN?err}`)
       traefik.http.services.tfg-heimdall-secure.loadbalancer.server.port: 8080
+
+networks:
+  docker-network:
+    external: true
