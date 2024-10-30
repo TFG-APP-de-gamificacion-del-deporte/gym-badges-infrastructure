@@ -22,7 +22,7 @@ services:
       traefik.http.routers.tfg-api-secure.entrypoints: websecure
       traefik.http.routers.tfg-api-secure.rule: Host(`api.${DOMAIN?err}`)
       traefik.http.routers.tfg-api-secure.tls: true
-      traefik.http.routers.tfg-api-secure.tls.certresolver: Host(`api.${DOMAIN?err}`)
+      traefik.http.routers.tfg-api-secure.tls.certresolver: ${DOMAIN?err}
       traefik.http.services.tfg-api-secure.loadbalancer.server.port: 8080
 
 networks:
