@@ -22,7 +22,7 @@ services:
       traefik.http.routers.tfg-heimdall-secure.entrypoints: websecure
       traefik.http.routers.tfg-heimdall-secure.rule: Host(`dashboard.${DOMAIN?err}`)
       traefik.http.routers.tfg-heimdall-secure.tls: true
-      traefik.http.routers.tfg-heimdall-secure.tls.certresolver: Host(`dashboard.${DOMAIN?err}`)
+      traefik.http.routers.tfg-heimdall-secure.tls.certresolver: ${DOMAIN?err}
       traefik.http.services.tfg-heimdall-secure.loadbalancer.server.port: 80
 
   postgresql:
