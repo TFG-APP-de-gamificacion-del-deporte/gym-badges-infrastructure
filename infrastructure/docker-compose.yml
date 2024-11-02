@@ -33,7 +33,8 @@ services:
     environment:
       POSTGRES_PASSWORD: ${POSTGRESQL_PASSWORD?err}
     networks:
-      - docker-network
+      docker-network:
+        ipv4_address: 172.19.0.14
 
   pgadmin:
     image: dpage/pgadmin4:${PGADMIN_VERSION}
