@@ -25,6 +25,27 @@ services:
       traefik.http.routers.tfg-api-secure.tls.certresolver: ${DOMAIN?err}
       traefik.http.services.tfg-api-secure.loadbalancer.server.port: 8080
 
+  gym-badge-web-app:
+    image: diegorevenga/gym-badges-web-app:${GYM_BADGES_WEB_APP_VERSION}
+    container_name: gym-badge-web-app
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TIMEZONE}
+    restart: unless-stopped
+    networks:
+      - docker-network
+    labels:
+      traefik.enable: true
+      traefik.http.routers.tfg-api.entrypoints: web
+      traefik.http.routers.tfg-api.rule: Host(`web.${DOMAIN?err}`)
+      traefik.http.routers.tfg-api.middlewares: redirect
+      traefik.http.routers.tfg-api-secure.entrypoints: websecure
+      traefik.http.routers.tfg-api-secure.rule: Host(`web.${DOMAIN?err}`)
+      traefik.http.routers.tfg-api-secure.tls: true
+      traefik.http.routers.tfg-api-secure.tls.certresolver: ${DOMAIN?err}
+      traefik.http.services.tfg-api-secure.loadbalancer.server.port: 3000
+
 networks:
   docker-network:
     external: true
