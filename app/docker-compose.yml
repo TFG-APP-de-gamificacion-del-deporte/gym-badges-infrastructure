@@ -33,7 +33,7 @@ services:
       PGID: ${PGID}
       TZ: ${TIMEZONE}
       API_URL: ${API_URL}
-      VERSION: ${API_URL}
+      VERSION: 'test'
     restart: unless-stopped
     networks:
       - docker-network
