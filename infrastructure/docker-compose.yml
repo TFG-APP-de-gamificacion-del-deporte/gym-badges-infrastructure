@@ -32,9 +32,21 @@ services:
     shm_size: 256mb
     environment:
       POSTGRES_PASSWORD: ${POSTGRESQL_PASSWORD?err}
+    ports:
+      - "15432:5432"
     networks:
       docker-network:
         ipv4_address: 172.19.0.144
+    labels:
+      traefik.enable: true
+      traefik.http.routers.tfg-postgresql.entrypoints: web
+      traefik.http.routers.tfg-postgresql.rule: Host(`db.${DOMAIN?err}`)
+      traefik.http.routers.tfg-postgresql.middlewares: redirect
+      traefik.http.routers.tfg-postgresql-secure.entrypoints: websecure
+      traefik.http.routers.tfg-postgresql-secure.rule: Host(`pgadmin.${DOMAIN?err}`)
+      traefik.http.routers.tfg-postgresql-secure.tls: true
+      traefik.http.routers.tfg-postgresql-secure.tls.certresolver: ${DOMAIN?err}
+      traefik.http.services.tfg-postgresql-secure.loadbalancer.server.port: 5432
 
   pgadmin:
     image: dpage/pgadmin4:${PGADMIN_VERSION}
