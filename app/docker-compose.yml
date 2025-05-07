@@ -40,7 +40,7 @@ services:
     labels:
       traefik.enable: true
       traefik.http.routers.tfg-web.entrypoints: web
-      traefik.http.routers.tfg-web.rule: Host(`web.${DOMAIN?err}`)
+      traefik.http.routers.tfg-web.rule: Host(`www.${DOMAIN?err}`)
       traefik.http.routers.tfg-web.middlewares: redirect
       traefik.http.routers.tfg-web-secure.entrypoints: websecure
       traefik.http.routers.tfg-web-secure.rule: Host(`web.${DOMAIN?err}`)
