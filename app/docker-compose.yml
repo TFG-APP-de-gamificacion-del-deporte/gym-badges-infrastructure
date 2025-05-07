@@ -43,7 +43,7 @@ services:
       traefik.http.routers.tfg-web.rule: Host(`www.${DOMAIN?err}`)
       traefik.http.routers.tfg-web.middlewares: redirect
       traefik.http.routers.tfg-web-secure.entrypoints: websecure
-      traefik.http.routers.tfg-web-secure.rule: Host(`web.${DOMAIN?err}`)
+      traefik.http.routers.tfg-web-secure.rule: Host(`www.${DOMAIN?err}`)
       traefik.http.routers.tfg-web-secure.tls: true
       traefik.http.routers.tfg-web-secure.tls.certresolver: ${DOMAIN?err}
       traefik.http.services.tfg-web-secure.loadbalancer.server.port: 3000
